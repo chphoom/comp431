@@ -39,7 +39,7 @@ for line in fileinput.input():
     #print("\n*" + line, end='')
     # • When well-formed (syntax and order) SMTP commands are read, print responses as described
     # below in section titled “Responses for Well-Formed Commands”.
-    lineList = re.split('\s,\t,\0,\n', line)
+    lineList = re.split('[\s\t\0\n]', line)
     command = lineList[0];
     # • For invalid (ill-formed) commands, print out the error message as described in the section below
     # titled “Error Processing”.
