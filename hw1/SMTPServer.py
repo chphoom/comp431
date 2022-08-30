@@ -21,7 +21,7 @@ output = []
 # • Reads a line of input from standard input (the keyboard in Linux).
 currStatus = status[1];
 for line in fileinput.input():
-    if currStatus.equalsstatus[354]:
+    if currStatus == status[354]:
         output.append(line)
     # • If/when “end-of-file” is reached on standard input (i.e., when control-D is typed from the keyboard
     # under Linux), terminate your program. Otherwise...
