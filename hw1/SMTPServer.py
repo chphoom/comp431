@@ -45,13 +45,13 @@ for line in fileinput.input():
     # titled “Error Processing”.
     if command in status.values():
         if command == status[1] == currStatus:
-            if lineList[2]!="FROM:" or helper.validPath(lineList[3])==False: #: add check valid path
+            if lineList[1]!="FROM:" or helper.validPath(lineList[2])==False: #: add check valid path
                 print(status[501])
             else: 
                 output.append(line)
                 currStatus = status[2]
         elif command == status[2] == currStatus:
-            if lineList[2]!="TO:" or helper.validPath(lineList[3])==False: #: add check for valid path
+            if lineList[1]!="TO:" or helper.validPath(lineList[2])==False: #: add check for valid path
                 print(status[501])
             else: 
                 path = "forward/" + lineList[3]
