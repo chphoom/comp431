@@ -5,7 +5,9 @@ special = {
 }
 
 def validPath(string):
-    sList = re.split('@', string)
+    if string[-1] != ">": return False
+    sList = re.split('[<@>]', string)
+    sList = list(filter(None,sList))
     if len(sList)!=2: return False
     local = sList[0]
     for s in special:
