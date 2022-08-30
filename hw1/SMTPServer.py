@@ -12,7 +12,8 @@ status = {
     4:".",
     500:"500 Syntax error: command unrecognized",
     501:"501 Syntax error in parameters or arguments",
-    503:"503 Bad sequence of commands"
+    503:"503 Bad sequence of commands",
+    0: "\n"
 }#end of dictionary
 
 output = []
@@ -38,7 +39,7 @@ for line in fileinput.input():
     #print("\n*" + line, end='')
     # • When well-formed (syntax and order) SMTP commands are read, print responses as described
     # below in section titled “Responses for Well-Formed Commands”.
-    lineList = re.split('\s\t\0\n', line)
+    lineList = re.split('\s,\t,\0,\n', line)
     command = lineList[0];
     # • For invalid (ill-formed) commands, print out the error message as described in the section below
     # titled “Error Processing”.
