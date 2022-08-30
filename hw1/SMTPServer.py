@@ -4,15 +4,15 @@ import helper
 
 
 status = {
-    "MAIL": 1,
-    "RCPT": 2,
-    "DATA": 3,
-    "250 OK": 250,
-    "354 Start mail input; end with . on a line by itself": 354,
-    ".": 4,
-    "500 Syntax error: command unrecognized": 500,
-    "501 Syntax error in parameters or arguments": 501,
-    "503 Bad sequence of commands": 503,
+    1: "MAIL",
+    2: "RCPT",
+    3:"DATA",
+    250:"250 OK",
+    354:"354 Start mail input; end with . on a line by itself",
+    4:".",
+    500:"500 Syntax error: command unrecognized",
+    501:"501 Syntax error in parameters or arguments",
+    503:"503 Bad sequence of commands"
 }#end of dictionary
 
 output = []
