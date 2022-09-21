@@ -36,23 +36,27 @@ for line in fileinput.input():
     # below in section titled “Responses for Well-Formed Commands”.
     lineList = re.split('[\s\t\0\n]', line)
     lineList = list(filter(None,lineList))
-    command = lineList[0];
+    command = lineList[0]
     # • For invalid (ill-formed) commands, print out the error message as described in the section below
     # titled “Error Processing”.
     if command in status.values():
         if command == status[1] == currStatus:
-            if lineList[1]!="FROM:":
+            lineList = re.split(':', lineList[1])
+            command = lineList[0]
+            if lineList[0]!="FROM":
                 print(status[500])
-            elif helper.validPath(lineList[2])==False: #: add check valid path
+            elif helper.validPath(lineList[1])==False: #: add check valid path
                 print(status[501])
             else: 
                 output.append(line)
                 print(status[250])
                 currStatus = status[2]
         elif command == status[2] == currStatus:
-            if lineList[1]!="TO:":
+            lineList = re.split(':', lineList[1])
+            command = lineList[0]
+            if lineList[0]!="TO":
                 print(status[500])
-            elif helper.validPath(lineList[2])==False: #: add check for valid path
+            elif helper.validPath(lineList[1])==False: #: add check for valid path
                 print(status[501])
             else: 
                 path = os.path.join('forward/', lineList[2])
