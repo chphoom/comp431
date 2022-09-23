@@ -6,7 +6,7 @@ import sys
 
 socStatus = {
     220: "220 hostname",
-    250: "250 hello echo pleased to meet you",
+    250: "250 Hello echo pleased to meet you",
     221: "221 hostname closing conneection"
 
 }  # end of dictionary
@@ -82,6 +82,7 @@ while True:
         currStatus = SMTPserver.status[1]
         while  line != "QUIT":
             line = c.recv(DATASIZE).decode(code)
+            print(line)
             if currStatus == SMTPserver.status[4]:
                 if line != "QUIT":
                     currStatus = SMTPserver.status[1]

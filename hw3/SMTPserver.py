@@ -30,7 +30,7 @@ def parse(line, socket, code, currStatus):
     # • If/when “end-of-file” is reached on standard input (i.e., when control-D is typed from the keyboard
     # under Linux), terminate your program. Otherwise...
     # • Echo the line of input to standard output (i.e., print the line of input exactly as it was input to
-    outPrint(line, socket, code)
+    #outPrint(line, socket, code)
     #print(currStatus)
     # standard output [i.e., to the Linux window in which you entered the command to execute your
     # program]).
@@ -63,7 +63,7 @@ def parse(line, socket, code, currStatus):
             elif helper.validPath(lineList[2])==False: #: add check for valid path
                 outPrint(status[501], socket, code)
             else: 
-                path = os.path.join('forward/', helper.getDomain(lineList[1]))
+                path = os.path.join('forward/', helper.getDomain(lineList[2]))
                 f = open(path,"a+")
                 outPrint(status[250], socket, code)
                 return status[3]
