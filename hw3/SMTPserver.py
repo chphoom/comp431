@@ -18,15 +18,19 @@ status = {
 output = []
 
 def parse(line, socket, code, currStatus):
-    if line == "":
-        return currStatus
-    elif line == "\n":
-        return currStatus
-
-    # Your program should be structured as a loop that:
-    # • Reads a line of input from standard input (the keyboard in Linux).
+    if line == "\n.\n":
+        currStatus = status[4]
+    # elif line == "\n":
+    #     return currStatus
     if currStatus == status[354] and line != "\n":
         output.append(line)
+        if lineList[-1]==status[4]:
+            currStatus=status[4]
+            command=status[4]
+        else:
+            return currStatus
+    # Your program should be structured as a loop that:
+    # • Reads a line of input from standard input (the keyboard in Linux).
     # • If/when “end-of-file” is reached on standard input (i.e., when control-D is typed from the keyboard
     # under Linux), terminate your program. Otherwise...
     # • Echo the line of input to standard output (i.e., print the line of input exactly as it was input to
@@ -40,6 +44,7 @@ def parse(line, socket, code, currStatus):
     lineList = re.split('[\s\t\0\n:]', line)
     lineList = list(filter(None,lineList))
     command = lineList[0]
+
     #print(lineList)
     # • For invalid (ill-formed) commands, print out the error message as described in the section below
     # titled “Error Processing”.
@@ -81,8 +86,9 @@ def parse(line, socket, code, currStatus):
         else:
             outPrint(status[503], socket, code)
     elif currStatus != status[354]:
+        #print("Error caused by" + command)
         outPrint(status[500], socket, code)
-    pass
+    return currStatus
 
 def outPrint(str, socket, code):
     socket.send(str.strip('[\s\t\0\n]').encode(code))

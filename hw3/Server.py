@@ -56,11 +56,11 @@ while True:
     c, addr = s.accept()
     # print ('Got connection from', addr )
 
-    hostname = c.getpeername()
+    hostname = c.gethostname()
 
     # create standard greeting
     # send a thank you message to the client. encoding to send byte type
-    SMTPserver.outPrint(socStatus[220].replace("hostname", hostname[0].strip('[\s\t\0\n]')), c, code)
+    SMTPserver.outPrint(socStatus[220].replace("hostname", hostname[0]).strip('[\s\t\0\n]'), c, code)
 
     # After sending this message the server must receive and acknowledge
     # a valid SMTP HELO command from the client before proceeding with mail processing
@@ -91,6 +91,7 @@ while True:
         #if line == "QUIT":
         if currStatus == SMTPserver.status[4]:
             SMTPserver.outPrint(socStatus[221].replace("hostname", hostname), c , code)
+            c.close()
             s.close()
         else:
             #TODO handle when QUIT is recieved without . message
