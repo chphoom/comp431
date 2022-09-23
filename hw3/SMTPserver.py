@@ -3,14 +3,13 @@ import re
 import helper
 import os
 
-
 status = {
     1: "MAIL",
     2: "RCPT",
-    3:"DATA",
-    250:"250 OK",
+    3: "DATA",
+    250: "250 OK",
     354:"354 Start mail input; end with . on a line by itself",
-    4:".",
+    4: ".",
     500:"500 Syntax error: command unrecognized",
     501:"501 Syntax error in parameters or arguments",
     503:"503 Bad sequence of commands"
@@ -19,6 +18,11 @@ status = {
 output = []
 
 def parse(line, socket, code, currStatus):
+    if line == "":
+        return currStatus
+    elif line == "\n":
+        return currStatus
+
     # Your program should be structured as a loop that:
     # • Reads a line of input from standard input (the keyboard in Linux).
     if currStatus == status[354] and line != "\n":
@@ -33,35 +37,36 @@ def parse(line, socket, code, currStatus):
     #print("\n*" + line, end='')
     # • When well-formed (syntax and order) SMTP commands are read, print responses as described
     # below in section titled “Responses for Well-Formed Commands”.
-    lineList = re.split('[\s\t\0\n]', line)
+    lineList = re.split('[\s\t\0\n:]', line)
     lineList = list(filter(None,lineList))
     command = lineList[0]
+    #print(lineList)
     # • For invalid (ill-formed) commands, print out the error message as described in the section below
     # titled “Error Processing”.
     if command in status.values():
         if command == status[1] == currStatus:
-            lineList = re.split(':', lineList[1])
-            command = lineList[0]
-            if lineList[0]!="FROM":
+            #lineList = re.split(':', lineList[1])
+            #command = lineList[0]
+            if lineList[1]!="FROM":
                 outPrint(status[500], socket, code)
-            elif helper.validPath(lineList[1])==False: #: add check valid path
+            elif helper.validPath(lineList[2])==False: #: add check valid path
                 outPrint(status[501], socket, code)
             else: 
                 #output.append(line)
                 outPrint(status[250], socket, code)
-                currStatus = status[2]
+                return status[2]
         elif command == status[2] == currStatus:
-            lineList = re.split(':', lineList[1])
-            command = lineList[0]
-            if lineList[0]!="TO":
+            #lineList = re.split(':', lineList[1])
+            #command = lineList[0]
+            if lineList[1]!="TO":
                 outPrint(status[500], socket, code)
-            elif helper.validPath(lineList[1])==False: #: add check for valid path
+            elif helper.validPath(lineList[2])==False: #: add check for valid path
                 outPrint(status[501], socket, code)
             else: 
                 path = os.path.join('forward/', helper.getDomain(lineList[1]))
                 f = open(path,"a+")
                 outPrint(status[250], socket, code)
-                currStatus = status[3]
+                return status[3]
                 #output.append(line)
         elif command == status[3] == currStatus:
             outPrint(status[354], socket, code)
@@ -71,15 +76,14 @@ def parse(line, socket, code, currStatus):
             outPrint(status[250], socket, code)
             for s in output:
                 f.write(s)
-            currStatus = status[4]
             output.clear()
+            return status[4]
         else:
             outPrint(status[503], socket, code)
     elif currStatus != status[354]:
         outPrint(status[500], socket, code)
-    
-    return currStatus
+    pass
 
 def outPrint(str, socket, code):
-    socket.send(str.endcode(code))
-    print(str)
+    socket.send(str.strip('[\s\t\0\n]').encode(code))
+    print(str.strip('[\s\t\0\n]'))

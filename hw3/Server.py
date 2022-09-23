@@ -6,12 +6,14 @@ import sys
 
 socStatus = {
     220: "220 hostname",
-    250: "hello echo pleasd to meet you",
-    221: "hostname closing conneection"
+    250: "250 hello echo pleased to meet you",
+    221: "221 hostname closing conneection"
 
 }  # end of dictionary
 
+#from client
 code = "utf-8"
+DATASIZE = 256
 
 # In this assignment you will write a program that will extend and convert your SMTP
 # “server” program (HW 1) into a “real” SMTP server that is able to interacts with the
@@ -28,7 +30,7 @@ code = "utf-8"
 
 s = socket.socket()  # create a socket object
 # print ("Socket successfully created")
-port = 8000+9634  # 8000 + last 4 digits of PID
+#port = 8000+9634  # 8000 + last 4 digits of PID
 
 
 while True:
@@ -39,8 +41,8 @@ while True:
     # coming from other computers on the network
     # Your SMTP server program requires only a single command line argument: the port
     # number on which it should listen for connections from clients.
-    ip = sys.argv[1]
-    s.bind((ip, port))
+    port = int(sys.argv[1])
+    s.bind(('', port))
     # print ("socket binded to %s" %(port))
 
     # put the socket into listening mode
@@ -54,16 +56,16 @@ while True:
     c, addr = s.accept()
     # print ('Got connection from', addr )
 
-    hostname = s.getpeername()
+    hostname = c.getpeername()
 
     # create standard greeting
     # send a thank you message to the client. encoding to send byte type
-    SMTPserver.outPrint(socStatus[220].replace("hostname", hostname), c, code)
+    SMTPserver.outPrint(socStatus[220].replace("hostname", hostname[0].strip('[\s\t\0\n]')), c, code)
 
     # After sending this message the server must receive and acknowledge
     # a valid SMTP HELO command from the client before proceeding with mail processing
-    line = s.recv().decode(code)
-    print(line)
+    line = c.recv(DATASIZE).decode(code)
+    #print(line)
     # (see the following section). The HELO message is acknowledged by the server with a 250
     # message. By convention, the text of the acknowledgement of the HELO message echoes
     # the text of the HELO message and includes the phrase “pleased to meet you.” If the server
@@ -79,13 +81,11 @@ while True:
         # loop and begins processing messages until the QUIT command is received.
         currStatus = SMTPserver.status[1]
         while  line != "QUIT":
-            line = s.recv().decode(code)
+            line = c.recv(DATASIZE).decode(code)
             if currStatus == SMTPserver.status[4]:
                 if line != "QUIT":
                     currStatus = SMTPserver.status[1]
             newStat = SMTPserver.parse(line, c, code, currStatus)
-            # figure out how to turn this into a function
-            # curr idea is for parse to return states     
             currStatus = newStat   
         #if line == "QUIT":
         if currStatus == SMTPserver.status[4]:
